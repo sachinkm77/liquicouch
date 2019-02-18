@@ -2,6 +2,7 @@ package com.github.liquicouch;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.CouchbaseCluster;
+import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.query.ParameterizedN1qlQuery;
 import com.github.liquicouch.changeset.ChangeEntry;
 import com.github.liquicouch.dao.ChangeEntryDAO;
@@ -52,6 +53,13 @@ public class LiquiCouch implements InitializingBean {
 
 
   public LiquiCouch(Bucket bucket) {
+    this.bucket = bucket;
+    this.dao = new ChangeEntryDAO(bucket);
+  }
+
+  public LiquiCouch(CouchbaseEnvironment env, List<String> nodes, String name,
+      String password) {
+    Bucket bucket = CouchbaseCluster.create(env, nodes).openBucket(name, password);
     this.bucket = bucket;
     this.dao = new ChangeEntryDAO(bucket);
   }
